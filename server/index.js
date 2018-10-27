@@ -3,14 +3,14 @@ const config = require('./config');
 const api = require('./api');
 const auth = require('./auth/routes');
 const errorHandler = require('./middleware/error-middleware');
-const { successLog, errorLog, } = require('./utils/logger');
+const { successLog, errorLog } = require('./utils/logger');
 
 const app = express();
 
 require('mongoose')
   .connect(config.db.url)
   .then(() => {
-    if(config.logging) {
+    if (config.logging) {
       console.log(successLog('db connected\n'));
     }
   })
@@ -22,6 +22,11 @@ require('./middleware/app-middleware')(app);
 
 app.use('/api', api);
 app.use('/auth', auth);
+app.use('/hello', (req, res) => {
+  res.status(200).json({
+    message: 'Hello World!'
+  });
+});
 
 app.use(errorHandler);
 
